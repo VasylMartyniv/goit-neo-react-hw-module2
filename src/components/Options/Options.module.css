@@ -1,0 +1,9 @@
+.options {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 5px;
+}
+
+.options button {
+  cursor: pointer;
+}
