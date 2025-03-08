@@ -14,6 +14,7 @@ const App = () => {
     neutral: 0,
     bad: 0,
   });
+  const [storageLoaded, setStorageLoaded] = useState(false);
 
   const updateFeedback = (feedbackType) => {
     setState({
@@ -31,19 +32,23 @@ const App = () => {
   };
 
   useEffect(() => {
-    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    if (storageLoaded) {
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+    }
+  }, [state, storageLoaded]);
 
   useEffect(() => {
     const savedState = window.localStorage.getItem(LOCAL_STORAGE_KEY);
     if (savedState) {
       setState(JSON.parse(savedState));
+      setStorageLoaded(true);
     } else {
       setState({
         good: 0,
         neutral: 0,
         bad: 0,
       });
+      setStorageLoaded(true);
     }
   }, []);
 
