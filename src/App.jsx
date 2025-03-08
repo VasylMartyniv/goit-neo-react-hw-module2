@@ -9,12 +9,17 @@ import Notification from "./components/Notification/Notification";
 const LOCAL_STORAGE_KEY = "state";
 
 const App = () => {
-  const [state, setState] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
+  const [state, setState] = useState(() => {
+    const savedState = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedState) {
+      return JSON.parse(savedState);
+    }
+    return {
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    };
   });
-  const [storageLoaded, setStorageLoaded] = useState(false);
 
   const updateFeedback = (feedbackType) => {
     setState({
@@ -32,25 +37,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (storageLoaded) {
-      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
-    }
-  }, [state, storageLoaded]);
-
-  useEffect(() => {
-    const savedState = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (savedState) {
-      setState(JSON.parse(savedState));
-      setStorageLoaded(true);
-    } else {
-      setState({
-        good: 0,
-        neutral: 0,
-        bad: 0,
-      });
-      setStorageLoaded(true);
-    }
-  }, []);
+    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
 
   const totalFeedback = state.good + state.neutral + state.bad;
   const positiveFeedback = totalFeedback
